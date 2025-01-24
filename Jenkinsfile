@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/your-github-username/your-repo.git'
+                git 'https://github.com/Prem192002/node-todo-cicd.git'
             }
         }
         
@@ -23,9 +23,9 @@ pipeline {
         
         stage('Push to AWS ECR') {
             steps {
-                sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPO_URL'
-                sh 'docker tag $IMAGE_NAME:latest $REPO_URL'
-                sh 'docker push $REPO_URL'
+                sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 992382487320.dkr.ecr.ap-south-1.amazonaws.com'
+                sh 'docker tag myapp:latest 992382487320.dkr.ecr.ap-south-1.amazonaws.com/myapp:latest'
+                sh 'docker push 992382487320.dkr.ecr.ap-south-1.amazonaws.com/myapp:latest'
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 sshagent(['EC2_SSH_CREDENTIALS']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@your-ec2-public-ip <<EOF
+                    ssh -o StrictHostKeyChecking=no ubuntu@13.200.235.213 <<EOF
                     docker pull $REPO_URL
                     docker stop myapp || true
                     docker rm myapp || true
